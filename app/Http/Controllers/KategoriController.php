@@ -10,12 +10,12 @@ class KategoriController extends Controller
     public function index()
     {
         $kategoris = Kategori::all();
-        return view('kategoris.index', compact('kategoris'));
+        return view('kategories.index', compact('kategoris'));
     }
 
     public function create()
     {
-        return view('kategoris.create');
+        return view('kategories.create');
     }
 
     public function store(Request $request)
@@ -31,7 +31,7 @@ class KategoriController extends Controller
 
     public function edit(Kategori $kategori)
     {
-        return view('kategoris.edit', compact('kategori'));
+        return view('kategories.edit', compact('kategori'));
     }
 
     public function update(Request $request, Kategori $kategori)

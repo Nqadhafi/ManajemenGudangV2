@@ -9,6 +9,9 @@ class Karyawan extends Model
 {
     use HasFactory;
 
+    // Tambahkan ini
+    protected $table = 'karyawan';
+
     protected $fillable = [
         'id_user',
         'id_divisi',

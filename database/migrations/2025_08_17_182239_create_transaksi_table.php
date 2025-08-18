@@ -29,6 +29,7 @@ class CreateTransaksiTable extends Migration
             $table->index(['tanggal_transaksi']);
             $table->index(['id_barang']);
             $table->index(['id_karyawan']);
+            $table->timestamps();
         });
     }
 

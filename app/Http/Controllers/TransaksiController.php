@@ -131,6 +131,6 @@ class TransaksiController extends Controller
             ->orderBy('tanggal_transaksi', 'desc')
             ->get();
         
-        return view('operator.history', compact('transaksis'));
+        return view('operator.transaksi.history', compact('transaksis'));
     }
 }

@@ -9,6 +9,9 @@ class Divisi extends Model
 {
     use HasFactory;
 
+    // Tambahkan ini untuk memperbaiki nama tabel
+    protected $table = 'divisi';
+
     protected $fillable = [
         'nama'
     ];

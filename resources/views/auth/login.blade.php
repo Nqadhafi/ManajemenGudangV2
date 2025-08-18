@@ -10,8 +10,12 @@
 </head>
 <body class="hold-transition login-page">
 <div class="login-box">
+    <div class="text-center">
+        <img src="{{ asset('images/logo.png') }}" alt="Logo" class="img-fluid" style="max-height: 100px;">
+    </div>
     <div class="login-logo">
-        <a href="#"><b>Manajemen</b>Gudang</a>
+        <a href="#" "><small>Manajemen Barang Gudang</small></a>
+        <small>PT.Shabat Warna Gemilang</small>
     </div>
     
     <div class="card">
