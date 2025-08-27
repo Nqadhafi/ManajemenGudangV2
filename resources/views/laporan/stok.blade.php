@@ -40,9 +40,9 @@
                                 <td>{{ $barang->satuan }}</td>
                                 <td>{{ $barang->stok_minimum }}</td>
                                 <td>
-                                    @if($barang->stok <= $barang->stok_minimum)
+                                    @if($barang->stok <= 0)
                                         <span class="badge badge-danger">Habis</span>
-                                    @elseif($barang->stok <= ($barang->stok_minimum * 1.5))
+                                    @elseif($barang->stok <= ($barang->stok_minimum * 1))
                                         <span class="badge badge-warning">Menipis</span>
                                     @else
                                         <span class="badge badge-success">Aman</span>

@@ -20,7 +20,7 @@
     
     <div class="card">
         <div class="card-body login-card-body">
-            <p class="login-box-msg">Sign in to start your session</p>
+            <p class="login-box-msg">Silahkan masuk untuk melanjutkan</p>
             
             <form action="{{ route('login') }}" method="post">
                 @csrf
@@ -56,7 +56,7 @@
                 
                 <div class="row">
                     <div class="col-12">
-                        <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                        <button type="submit" class="btn btn-primary btn-block">Masuk</button>
                     </div>
                 </div>
             </form>
