@@ -14,6 +14,21 @@
         .badge-danger { background-color: #dc3545; }
         .badge-warning { background-color: #ffc107; color: #000; }
         .badge-success { background-color: #28a745; }
+
+        /* Tambahan untuk tanda tangan */
+        .signature {
+            width: 100%;
+            margin-top: 50px;
+            display: flex;
+            justify-content: flex-end;
+        }
+        .signature-block {
+            text-align: center;
+            width: 250px;
+        }
+        .signature-space {
+            height: 80px; /* ruang kosong untuk tanda tangan */
+        }
     </style>
 </head>
 <body>
@@ -63,6 +78,16 @@
             @endif
         </tbody>
     </table>
+
+    <!-- Blok tanda tangan -->
+    <div class="signature">
+        <div class="signature-block">
+            <p>Surakarta, {{ date('d/m/Y') }}</p>
+            <p><strong>Admin Gudang</strong></p>
+            <div class="signature-space"></div>
+            <p><u>Lia Setianingrum</u></p>
+        </div>
+    </div>
     
     <script>
         window.print();

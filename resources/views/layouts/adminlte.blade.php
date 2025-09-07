@@ -96,7 +96,7 @@
                         <li class="nav-item">
                             <a href="{{ route('suppliers.index') }}" class="nav-link">
                                 <i class="nav-icon fas fa-truck"></i>
-                                <p>Supplier</p>
+                                <p>Input Data Supplier</p>
                             </a>
                         </li>
                         <li class="nav-item">
@@ -116,13 +116,13 @@
                         <li class="nav-item">
                             <a href="{{ route('transaksi.masuk') }}" class="nav-link">
                                 <i class="nav-icon fas fa-arrow-down"></i>
-                                <p>Transaksi Masuk</p>
+                                <p>Input Barang Masuk</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('transaksi.keluar') }}" class="nav-link">
                                 <i class="nav-icon fas fa-arrow-up"></i>
-                                <p>Transaksi Keluar</p>
+                                <p>Input Koreksi Stok Barang</p>
                             </a>
                         </li>
                         
@@ -130,15 +130,15 @@
                         <li class="nav-item">
                             <a href="{{ route('laporan.stok') }}" class="nav-link">
                                 <i class="nav-icon fas fa-clipboard-list"></i>
-                                <p>Laporan Stok</p>
+                                <p>Laporan Persediaan barang</p>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        {{-- <li class="nav-item">
                             <a href="{{ route('laporan.transaksi') }}" class="nav-link">
                                 <i class="nav-icon fas fa-file-alt"></i>
-                                <p>Laporan Transaksi</p>
+                                <p>Laporan Transaksi Keluar Masuk Barang</p>
                             </a>
-                        </li>
+                        </li> --}}
                     @endif
 
                     @if(Auth::user()->role == 'operator')
@@ -146,13 +146,13 @@
                         <li class="nav-item">
                             <a href="{{ route('operator.transaksi.keluar') }}" class="nav-link">
                                 <i class="nav-icon fas fa-arrow-up"></i>
-                                <p>Transaksi Keluar</p>
+                                <p>Input Data Keluar Barang</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('operator.history') }}" class="nav-link">
                                 <i class="nav-icon fas fa-history"></i>
-                                <p>History Transaksi</p>
+                                <p>Laporan Riwayat Transaksi</p>
                             </a>
                         </li>
                     @endif

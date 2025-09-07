@@ -9,87 +9,54 @@ use App\Models\Supplier;
 
 class BarangTableSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
         $kategoris = Kategori::all();
         $suppliers = Supplier::all();
 
-        if ($kategoris->count() > 0 && $suppliers->count() > 0) {
-            $barangs = [
-                [
-                    'nama_barang' => 'Laptop Dell Inspiron',
-                    'stok' => 15,
-                    'satuan' => 'unit',
-                    'stok_minimum' => 5,
-                    'id_kategori' => $kategoris[0]->id, // Elektronik
-                    'id_supplier' => $suppliers[0]->id  // PT. Sumber Makmur
-                ],
-                [
-                    'nama_barang' => 'Kertas HVS A4 70gsm',
-                    'stok' => 500,
-                    'satuan' => 'rim',
-                    'stok_minimum' => 100,
-                    'id_kategori' => $kategoris[1]->id, // Peralatan Kantor
-                    'id_supplier' => $suppliers[1]->id  // CV. Berkah Jaya
-                ],
-                [
-                    'nama_barang' => 'Pulpen Pilot Hitam',
-                    'stok' => 200,
-                    'satuan' => 'buah',
-                    'stok_minimum' => 50,
-                    'id_kategori' => $kategoris[3]->id, // Alat Tulis
-                    'id_supplier' => $suppliers[2]->id  // Toko Elektronik Sejahtera
-                ],
-                [
-                    'nama_barang' => 'Meja Kantor Kayu',
-                    'stok' => 10,
-                    'satuan' => 'unit',
-                    'stok_minimum' => 3,
-                    'id_kategori' => $kategoris[4]->id, // Furniture
-                    'id_supplier' => $suppliers[3]->id  // Distributor Peralatan Kantor
-                ],
-                [
-                    'nama_barang' => 'Bahan Baku Plastik',
-                    'stok' => 1000,
-                    'satuan' => 'kg',
-                    'stok_minimum' => 200,
-                    'id_kategori' => $kategoris[2]->id, // Bahan Baku
-                    'id_supplier' => $suppliers[4]->id  // Supplier Bahan Baku
-                ],
-                [
-                    'nama_barang' => 'Monitor LCD 24 inch',
-                    'stok' => 8,
-                    'satuan' => 'unit',
-                    'stok_minimum' => 3,
-                    'id_kategori' => $kategoris[0]->id, // Elektronik
-                    'id_supplier' => $suppliers[0]->id  // PT. Sumber Makmur
-                ],
-                [
-                    'nama_barang' => 'Staples Max',
-                    'stok' => 150,
-                    'satuan' => 'box',
-                    'stok_minimum' => 30,
-                    'id_kategori' => $kategoris[3]->id, // Alat Tulis
-                    'id_supplier' => $suppliers[1]->id  // CV. Berkah Jaya
-                ],
-                [
-                    'nama_barang' => 'Kursi Kantor Ergonomis',
-                    'stok' => 12,
-                    'satuan' => 'unit',
-                    'stok_minimum' => 5,
-                    'id_kategori' => $kategoris[4]->id, // Furniture
-                    'id_supplier' => $suppliers[3]->id  // Distributor Peralatan Kantor
-                ]
-            ];
+        if ($kategoris->count() < 5 || $suppliers->count() < 1) {
+            $this->command->warn('Kategori/Supplier belum siap. Jalankan Supplier & Kategori seeder dulu.');
+            return;
+        }
 
-            foreach ($barangs as $barang) {
-                Barang::create($barang);
-            }
+        // Indeks kategori (sesuaikan dengan urutan di KategoriTableSeeder di atas)
+        $katKertas   = $kategoris[0]->id;
+        $katVinyl    = $kategoris[1]->id;
+        $katFlexy    = $kategoris[2]->id;
+        $katTinta    = $kategoris[3]->id;
+        $katLaminasi = $kategoris[4]->id;
+
+        // Ambil supplier secara melingkar
+        $sid = fn($i) => $suppliers[$i % $suppliers->count()]->id;
+
+        $barangs = [
+            // Kertas
+            ['nama_barang' => 'Kertas HVS A4 80gsm',          'stok' => 0, 'satuan' => 'Rim',   'stok_minimum' => 50,  'id_kategori' => $katKertas,   'id_supplier' => $sid(0)],
+            ['nama_barang' => 'Art Paper A3 150gsm',          'stok' => 0, 'satuan' => 'Rim',   'stok_minimum' => 30,  'id_kategori' => $katKertas,   'id_supplier' => $sid(1)],
+            ['nama_barang' => 'Ivory A3 260gsm',               'stok' => 0, 'satuan' => 'Rim',   'stok_minimum' => 20,  'id_kategori' => $katKertas,   'id_supplier' => $sid(2)],
+
+            // Stiker Vinyl
+            ['nama_barang' => 'Stiker Vinyl Glossy A3+',      'stok' => 0, 'satuan' => 'Lembar','stok_minimum' => 100, 'id_kategori' => $katVinyl,    'id_supplier' => $sid(1)],
+            ['nama_barang' => 'Stiker Vinyl Doff A3+',        'stok' => 0, 'satuan' => 'Lembar','stok_minimum' => 100, 'id_kategori' => $katVinyl,    'id_supplier' => $sid(2)],
+
+            // Flexy/MMT
+            ['nama_barang' => 'Flexy China 280gsm (3.2m)',    'stok' => 0, 'satuan' => 'Meter', 'stok_minimum' => 150, 'id_kategori' => $katFlexy,    'id_supplier' => $sid(3)],
+            ['nama_barang' => 'Flexy Korea 440gsm (3.2m)',    'stok' => 0, 'satuan' => 'Meter', 'stok_minimum' => 120, 'id_kategori' => $katFlexy,    'id_supplier' => $sid(4)],
+
+            // Tinta (CMYK)
+            ['nama_barang' => 'Tinta Hitam (K) 1 Liter',      'stok' => 0, 'satuan' => 'Botol', 'stok_minimum' => 20,  'id_kategori' => $katTinta,    'id_supplier' => $sid(0)],
+            ['nama_barang' => 'Tinta Cyan (C) 1 Liter',       'stok' => 0, 'satuan' => 'Botol', 'stok_minimum' => 15,  'id_kategori' => $katTinta,    'id_supplier' => $sid(0)],
+            ['nama_barang' => 'Tinta Magenta (M) 1 Liter',    'stok' => 0, 'satuan' => 'Botol', 'stok_minimum' => 15,  'id_kategori' => $katTinta,    'id_supplier' => $sid(0)],
+            ['nama_barang' => 'Tinta Yellow (Y) 1 Liter',     'stok' => 0, 'satuan' => 'Botol', 'stok_minimum' => 15,  'id_kategori' => $katTinta,    'id_supplier' => $sid(0)],
+
+            // Laminasi
+            ['nama_barang' => 'Laminating Glossy 32 micron',  'stok' => 0, 'satuan' => 'Roll',  'stok_minimum' => 10,  'id_kategori' => $katLaminasi, 'id_supplier' => $sid(2)],
+            ['nama_barang' => 'Laminating Doff 32 micron',    'stok' => 0, 'satuan' => 'Roll',  'stok_minimum' => 10,  'id_kategori' => $katLaminasi, 'id_supplier' => $sid(2)],
+        ];
+
+        Barang::query()->delete(); // opsional, agar rapi saat reseed
+        foreach ($barangs as $barang) {
+            Barang::create($barang);
         }
     }
 }

@@ -7,21 +7,18 @@ use App\Models\Kategori;
 
 class KategoriTableSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
+        // Semua kategori difokuskan ke bahan baku percetakan
         $kategoris = [
-            ['nama' => 'Bahan Khusus'],
-            ['nama' => 'Kertas A3'],
-            ['nama' => 'Stiker A3'],
-            ['nama' => 'Flexy MMT'],
-            ['nama' => 'Kertas Plano']
+            ['nama' => 'Kertas (Bahan Baku)'],
+            ['nama' => 'Stiker Vinyl (Bahan Baku)'],
+            ['nama' => 'Flexy / MMT (Bahan Baku)'],
+            ['nama' => 'Tinta (Bahan Baku)'],
+            ['nama' => 'Laminasi (Bahan Baku)'],
         ];
 
+        Kategori::query()->delete(); // opsional, agar rapi saat reseed
         foreach ($kategoris as $kategori) {
             Kategori::create($kategori);
         }
