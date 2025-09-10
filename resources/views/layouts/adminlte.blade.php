@@ -81,19 +81,19 @@
                             <li class="nav-header">MASTER</li>
 
                             <li class="nav-item">
-                                <a href="{{ route('barangs.index') }}" class="nav-link">
-                                    <i class="nav-icon fas fa-box"></i>
-                                    <p>Barang</p>
-                                </a>
+                            <a href="{{ route('barangs.index') }}"
+                            class="nav-link {{ request()->routeIs('barangs.*') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-box"></i><p>Barang</p>
+                            </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('suppliers.index') }}" class="nav-link">
+                                <a href="{{ route('suppliers.index') }}" class="nav-link {{ request()->routeIs('suppliers.*') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-truck"></i>
                                     <p>Supplier</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('kategoris.index') }}" class="nav-link">
+                                <a href="{{ route('kategoris.index') }}" class="nav-link {{ request()->routeIs('kategoris.*') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-tags"></i>
                                     <p>Kategori</p>
                                 </a>
@@ -102,13 +102,13 @@
                             <!-- TRANSAKSI -->
                             <li class="nav-header">TRANSAKSI</li>
                             <li class="nav-item">
-                                <a href="{{ route('transaksi.masuk') }}" class="nav-link">
+                                <a href="{{ route('transaksi.masuk') }}" class="nav-link {{ request()->routeIs('transaksi.masuk') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-arrow-down"></i>
                                     <p>Barang Masuk</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('transaksi.keluar') }}" class="nav-link">
+                                <a href="{{ route('transaksi.keluar') }}" class="nav-link {{ request()->routeIs('transaksi.keluar') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-arrow-up"></i>
                                     <p>Barang Keluar</p>
                                 </a>
@@ -117,13 +117,13 @@
                             <!-- LAPORAN -->
                             <li class="nav-header">LAPORAN</li>
                             <li class="nav-item">
-                                <a href="{{ route('laporan.stok') }}" class="nav-link">
+                                <a href="{{ route('laporan.stok') }}" class="nav-link {{ request()->routeIs('laporan.stok') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-clipboard-list"></i>
                                     <p>Persediaan Barang</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('laporan.transaksi') }}" class="nav-link">
+                                <a href="{{ route('laporan.transaksi') }}" class="nav-link {{ request()->routeIs('laporan.transaksi') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-file-alt"></i>
                                     <p>Transaksi Barang</p>
                                 </a>
@@ -141,19 +141,19 @@
                                 </a>
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
-                                        <a href="{{ route('users.index') }}" class="nav-link">
+                                        <a href="{{ route('users.index') }}" class="nav-link {{ request()->routeIs('users.*') ? 'active' : '' }}">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>User Management</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="{{ route('karyawans.index') }}" class="nav-link">
+                                        <a href="{{ route('karyawans.index') }}" class="nav-link {{ request()->routeIs('karyawans.*') ? 'active' : '' }}">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Data Karyawan</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="{{ route('divisis.index') }}" class="nav-link">
+                                        <a href="{{ route('divisis.index') }}" class="nav-link {{ request()->routeIs('divisis.*') ? 'active' : '' }}">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Divisi</p>
                                         </a>

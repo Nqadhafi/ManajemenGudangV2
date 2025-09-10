@@ -7,6 +7,10 @@ use App\Models\Kategori;
 use App\Models\Supplier;
 use App\Models\Transaksi;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\BarangExport;
+use App\Imports\BarangImport;
+
 
 class BarangController extends Controller
 {
@@ -79,4 +83,33 @@ class BarangController extends Controller
         
         return view('barangs.kartu-stok', compact('barang', 'transaksis'));
     }
+    public function export()
+{
+    return Excel::download(new BarangExport, 'barangs.xlsx');
+}
+
+public function import(Request $request)
+{
+    $request->validate([
+        'file'           => 'required|file|mimes:xlsx,xls,csv|max:20480',
+        'auto_create'    => 'nullable|boolean',
+        'case_sensitive' => 'nullable|boolean',
+    ]);
+
+    $import = new BarangImport(
+        (bool)$request->boolean('auto_create'),
+        (bool)$request->boolean('case_sensitive')
+    );
+
+    Excel::import($import, $request->file('file'));
+
+    $failures = $import->failures();
+    if ($failures->isNotEmpty()) {
+        return back()->with('error','Sebagian baris gagal diimport.')->with('import_failures',$failures);
+    }
+
+    return back()->with('success','Import Barang selesai.');
+}
+
+
 }

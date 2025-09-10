@@ -26,7 +26,16 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['role:admin'])->group(function () {
         // User Management
         Route::resource('users', UserController::class);
-        
+            Route::get('barangs/export', [BarangController::class, 'export'])->name('barangs.export');
+    Route::post('barangs/import', [BarangController::class, 'import'])->name('barangs.import');
+
+    // SUPPLIER
+    Route::get('suppliers/export', [SupplierController::class, 'export'])->name('suppliers.export');
+    Route::post('suppliers/import', [SupplierController::class, 'import'])->name('suppliers.import');
+
+    // KATEGORI
+    Route::get('kategoris/export', [KategoriController::class, 'export'])->name('kategoris.export');
+    Route::post('kategoris/import', [KategoriController::class, 'import'])->name('kategoris.import');
         // Karyawan Management
         Route::resource('karyawans', KaryawanController::class);
         
@@ -38,7 +47,8 @@ Route::middleware(['auth'])->group(function () {
         
         // Kategori Management
         Route::resource('kategoris', KategoriController::class);
-        
+                    // BARANG
+
         // Barang Management
         Route::resource('barangs', BarangController::class);
         Route::get('/barangs/{id}/kartu-stok', [BarangController::class, 'kartuStok'])->name('barangs.kartu-stok');
@@ -56,6 +66,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/laporan/transaksi', [LaporanController::class, 'transaksiIndex'])->name('laporan.transaksi');
         Route::get('/laporan/stok/print', [LaporanController::class, 'stokPrint'])->name('laporan.stok.print');
         Route::get('/laporan/transaksi/print', [LaporanController::class, 'transaksiPrint'])->name('laporan.transaksi.print');
+
+
     });
 
     // Operator Routes

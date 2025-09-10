@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Kategori;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\KategoriExport;
+use App\Imports\KategoriImport;
 
 class KategoriController extends Controller
 {
@@ -54,4 +57,23 @@ class KategoriController extends Controller
         $kategori->delete();
         return redirect()->route('kategoris.index')->with('success', 'Kategori berhasil dihapus');
     }
+    public function export() { return Excel::download(new KategoriExport, 'kategoris.xlsx'); }
+
+public function import(Request $request)
+{
+    $request->validate([
+        'file'           => 'required|file|mimes:xlsx,xls,csv|max:20480',
+        'case_sensitive' => 'nullable|boolean',
+    ]);
+
+    $import = new KategoriImport((bool)$request->boolean('case_sensitive'));
+    Excel::import($import, $request->file('file'));
+
+    $failures = $import->failures();
+    if ($failures->isNotEmpty()) {
+        return back()->with('error','Sebagian baris gagal diimport.')->with('import_failures',$failures);
+    }
+
+    return back()->with('success','Import Kategori selesai.');
+}
 }
