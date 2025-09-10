@@ -20,8 +20,7 @@
             <!-- Left navbar links -->
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i
-                            class="fas fa-bars"></i></a>
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
             </ul>
 
@@ -37,7 +36,7 @@
                         </span>
                         <div class="dropdown-divider"></div>
                         <a href="{{ route('logout') }}" class="dropdown-item"
-                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                             <i class="fas fa-sign-out-alt mr-2"></i> Logout
                         </a>
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
@@ -69,6 +68,7 @@
                 <!-- Sidebar Menu -->
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+                        <!-- DASHBOARD -->
                         <li class="nav-item">
                             <a href="{{ route('dashboard') }}" class="nav-link">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -77,70 +77,26 @@
                         </li>
 
                         @if (Auth::user()->role == 'admin')
-                            <!-- MANAJEMEN MASTER -->
-                            <li class="nav-header">MANAJEMEN MASTER</li>
+                            <!-- MASTER (top level, tanpa sub) -->
+                            <li class="nav-header">MASTER</li>
 
-                            <!-- Master User & Karyawan -->
-                            <li class="nav-item has-treeview">
-                                <a href="#" class="nav-link">
-                                    <i class="nav-icon fas fa-users-cog"></i>
-                                    <p>
-                                        Manajemen User
-                                        <i class="right fas fa-angle-left"></i>
-                                    </p>
+                            <li class="nav-item">
+                                <a href="{{ route('barangs.index') }}" class="nav-link">
+                                    <i class="nav-icon fas fa-box"></i>
+                                    <p>Barang</p>
                                 </a>
-                                <ul class="nav nav-treeview">
-                                    <li class="nav-item">
-                                        <a href="{{ route('users.index') }}" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>User Management</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="{{ route('karyawans.index') }}" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Data Karyawan</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="{{ route('divisis.index') }}" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Divisi</p>
-                                        </a>
-                                    </li>
-                                </ul>
                             </li>
-
-                            <!-- Master Data -->
-                            <li class="nav-item has-treeview">
-                                <a href="#" class="nav-link">
-                                    <i class="nav-icon fas fa-database"></i>
-                                    <p>
-                                        Master Data
-                                        <i class="right fas fa-angle-left"></i>
-                                    </p>
+                            <li class="nav-item">
+                                <a href="{{ route('suppliers.index') }}" class="nav-link">
+                                    <i class="nav-icon fas fa-truck"></i>
+                                    <p>Supplier</p>
                                 </a>
-                                <ul class="nav nav-treeview">
-                                    <li class="nav-item">
-                                        <a href="{{ route('barangs.index') }}" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Barang</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="{{ route('suppliers.index') }}" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Data Supplier</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="{{ route('kategoris.index') }}" class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
-                                            <p>Kategori</p>
-                                        </a>
-                                    </li>
-
-                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('kategoris.index') }}" class="nav-link">
+                                    <i class="nav-icon fas fa-tags"></i>
+                                    <p>Kategori</p>
+                                </a>
                             </li>
 
                             <!-- TRANSAKSI -->
@@ -171,6 +127,38 @@
                                     <i class="nav-icon fas fa-file-alt"></i>
                                     <p>Transaksi Barang</p>
                                 </a>
+                            </li>
+
+                            <!-- SETTINGS (paling bawah, ganti dari Manajemen User) -->
+                            <li class="nav-header">PENGATURAN</li>
+                            <li class="nav-item has-treeview">
+                                <a href="#" class="nav-link">
+                                    <i class="nav-icon fas fa-cog"></i>
+                                    <p>
+                                        Settings
+                                        <i class="right fas fa-angle-left"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <a href="{{ route('users.index') }}" class="nav-link">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>User Management</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ route('karyawans.index') }}" class="nav-link">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Data Karyawan</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ route('divisis.index') }}" class="nav-link">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Divisi</p>
+                                        </a>
+                                    </li>
+                                </ul>
                             </li>
                         @endif
 
@@ -244,18 +232,18 @@
     @yield('js')
 
     <script>
-        // Aktifkan treeview secara otomatis berdasarkan URL saat ini
+        // Aktifkan state aktif & buka treeview sesuai URL
         $(document).ready(function() {
             var url = window.location;
+
             $('ul.nav-sidebar a').filter(function() {
                 return this.href == url;
             }).parent().addClass('active');
 
             $('ul.nav-sidebar a').filter(function() {
                 return this.href == url;
-            }).parent().parent().parent().addClass('menu-open');
+            }).parentsUntil('.nav-sidebar', '.has-treeview').addClass('menu-open').children('a').addClass('active');
         });
     </script>
 </body>
-
 </html>
