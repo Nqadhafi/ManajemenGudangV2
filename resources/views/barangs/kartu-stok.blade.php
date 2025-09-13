@@ -43,18 +43,17 @@
                                 <th>Tanggal</th>
                                 <th>Jenis</th>
                                 <th>Jumlah</th>
+                                <th>Harga</th>
                                 <th>Karyawan</th>
                                 <th>Keterangan</th>
                                 <th>Stok Akhir</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @php
-                                $stok_berjalan = 0;
-                            @endphp
+                            @php $stok_berjalan = 0; @endphp
                             @foreach($transaksis->reverse() as $transaksi)
                                 @php
-                                    if($transaksi->jenis_transaksi == 'masuk') {
+                                    if ($transaksi->jenis_transaksi == 'masuk') {
                                         $stok_berjalan += $transaksi->jumlah;
                                     } else {
                                         $stok_berjalan -= $transaksi->jumlah;
@@ -68,6 +67,13 @@
                                         </span>
                                     </td>
                                     <td>{{ $transaksi->jumlah }}</td>
+                                    <td>
+                                        @if($transaksi->jenis_transaksi === 'masuk' && !is_null($transaksi->harga_satuan))
+                                            Rp {{ number_format($transaksi->harga_satuan, 2, ',', '.') }}
+                                        @else
+                                            —
+                                        @endif
+                                    </td>
                                     <td>{{ $transaksi->karyawan->nama ?? '-' }}</td>
                                     <td>{{ $transaksi->keterangan ?? '-' }}</td>
                                     <td>{{ $stok_berjalan }}</td>
@@ -75,7 +81,7 @@
                             @endforeach
                             @if($transaksis->isEmpty())
                                 <tr>
-                                    <td colspan="6" class="text-center">Belum ada transaksi</td>
+                                    <td colspan="7" class="text-center">Belum ada transaksi</td>
                                 </tr>
                             @endif
                         </tbody>

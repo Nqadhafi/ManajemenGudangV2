@@ -15,8 +15,9 @@
             </div>
         </div>
     </div>
-    
-    {{-- <div class="col-lg-3 col-6">
+
+    {{-- 
+    <div class="col-lg-3 col-6">
         <div class="small-box bg-success">
             <div class="inner">
                 <h3>{{ $totalStok }}</h3>
@@ -26,8 +27,9 @@
                 <i class="fas fa-cubes"></i>
             </div>
         </div>
-    </div> --}}
-    
+    </div>
+    --}}
+
     <div class="col-lg-3 col-6">
         <div class="small-box bg-warning">
             <div class="inner">
@@ -39,7 +41,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col-lg-3 col-6">
         <div class="small-box bg-danger">
             <div class="inner">
@@ -49,6 +51,18 @@
             <div class="icon">
                 <i class="fas fa-exchange-alt"></i>
             </div>
+        </div>
+    </div>
+
+    {{-- Total Nilai Aset --}}
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-teal">
+            <div class="inner">
+                <h3>Rp {{ number_format($totalNilaiAset, 2, ',', '.') }}</h3>
+                <p>Total Nilai Aset*</p>
+            </div>
+            <div class="icon"><i class="fas fa-coins"></i></div>
+            <div class="small text-right pr-2 pb-2">* hanya barang yg sudah punya harga</div>
         </div>
     </div>
 </div>

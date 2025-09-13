@@ -50,7 +50,14 @@
                             <span class="invalid-feedback">{{ $message }}</span>
                         @enderror
                     </div>
-                    
+                    <div class="form-group">
+                    <label for="harga_satuan">Harga Satuan (Rp)</label>
+                    <input type="number" step="0.01" min="0" name="harga_satuan" id="harga_satuan"
+                            class="form-control @error('harga_satuan') is-invalid @enderror"
+                            value="{{ old('harga_satuan') }}" required>
+                    @error('harga_satuan')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                    </div>
+
                     <div class="form-group">
                         <label for="keterangan">Keterangan</label>
                         <textarea name="keterangan" class="form-control @error('keterangan') is-invalid @enderror">{{ old('keterangan') }}</textarea>

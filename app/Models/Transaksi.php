@@ -14,13 +14,16 @@ class Transaksi extends Model
         'id_barang',
         'id_karyawan',
         'jumlah',
-        'keterangan'
+        'keterangan',
+        'harga_satuan'
     ];
 
     protected $dates = [
         'tanggal_transaksi'
     ];
-
+    protected $casts = [
+        'harga_satuan' => 'decimal:2',
+    ];
     public function barang()
     {
         return $this->belongsTo(Barang::class, 'id_barang');
