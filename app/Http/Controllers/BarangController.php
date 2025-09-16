@@ -14,11 +14,14 @@ use App\Imports\BarangImport;
 
 class BarangController extends Controller
 {
-    public function index()
-    {
-        $barangs = Barang::with(['kategori', 'supplier'])->get();
-        return view('barangs.index', compact('barangs'));
-    }
+public function index()
+{
+    $barangs   = Barang::with(['kategori', 'supplier'])->orderBy('nama_barang')->get();
+    $kategoris = Kategori::orderBy('nama')->get();
+    $suppliers = Supplier::orderBy('nama_supplier')->get();
+
+    return view('barangs.index', compact('barangs', 'kategoris', 'suppliers'));
+}
 
     public function create()
     {
@@ -109,6 +112,23 @@ public function import(Request $request)
     }
 
     return back()->with('success','Import Barang selesai.');
+}
+
+public function search(Request $request)
+{
+    $q          = trim((string) $request->query('q', ''));             // hanya nama
+    $kategoriId = $request->query('kategori_id');                      // fixed filter
+    $supplierId = $request->query('supplier_id');                      // fixed filter
+
+    $barangs = Barang::with(['kategori','supplier'])
+        ->when($q !== '', fn($qry) => $qry->where('nama_barang', 'like', "%{$q}%"))
+        ->when($kategoriId, fn($qry, $id) => $qry->where('id_kategori', $id))
+        ->when($supplierId, fn($qry, $id) => $qry->where('id_supplier', $id))
+        ->orderBy('nama_barang')
+        ->limit(100)
+        ->get();
+
+    return response()->view('barangs._rows', compact('barangs'));
 }
 
 

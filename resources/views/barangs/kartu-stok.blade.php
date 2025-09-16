@@ -47,6 +47,7 @@
                                 <th>Karyawan</th>
                                 <th>Keterangan</th>
                                 <th>Stok Akhir</th>
+                                <th>Ubah</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -77,6 +78,11 @@
                                     <td>{{ $transaksi->karyawan->nama ?? '-' }}</td>
                                     <td>{{ $transaksi->keterangan ?? '-' }}</td>
                                     <td>{{ $stok_berjalan }}</td>
+                                    <td class="text-nowrap">
+                                    <a href="{{ route('transaksi.edit', $transaksi->id) }}" class="btn btn-sm btn-warning">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    </td>
                                 </tr>
                             @endforeach
                             @if($transaksis->isEmpty())

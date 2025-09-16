@@ -83,7 +83,7 @@
                             <li class="nav-item">
                             <a href="{{ route('barangs.index') }}"
                             class="nav-link {{ request()->routeIs('barangs.*') ? 'active' : '' }}">
-                            <i class="nav-icon fas fa-box"></i><p>Barang</p>
+                            <i class="nav-icon fas fa-box"></i><p>Barang / Kartu Stok</p>
                             </a>
                             </li>
                             <li class="nav-item">
@@ -230,6 +230,7 @@
     <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('vendor/adminlte/dist/js/adminlte.min.js') }}"></script>
     @yield('js')
+    @stack('scripts')
 
     <script>
         // Aktifkan state aktif & buka treeview sesuai URL

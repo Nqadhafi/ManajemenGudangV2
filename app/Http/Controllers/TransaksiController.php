@@ -156,4 +156,126 @@ public function masukStore(Request $request)
         
         return view('operator.transaksi.history', compact('transaksis'));
     }
+
+
+
+
+
+public function edit(Transaksi $transaksi)
+{
+    // Opsi sederhana: id_barang & jenis_tidak diubah lewat edit
+    $karyawans = Karyawan::all();
+
+    if ($transaksi->jenis_transaksi === 'masuk') {
+        return view('transaksi.edit-masuk', [
+            'transaksi' => $transaksi,
+            'barang'    => $transaksi->barang,  // tampilkan info, tidak diedit
+            'karyawans' => $karyawans,
+        ]);
+    } else {
+        return view('transaksi.edit-keluar', [
+            'transaksi' => $transaksi,
+            'barang'    => $transaksi->barang,  // tampilkan info, tidak diedit
+            'karyawans' => $karyawans,
+        ]);
+    }
+}
+
+public function update(Request $request, Transaksi $transaksi)
+{
+    if ($transaksi->jenis_transaksi === 'masuk') {
+        $request->validate([
+            'id_karyawan'  => 'required|exists:karyawan,id',
+            'jumlah'       => 'required|integer|min:1',
+
+            'keterangan'   => 'nullable|string',
+        ]);
+
+        DB::transaction(function () use ($request, $transaksi) {
+            // Kunci barang terkait
+            $barang = Barang::lockForUpdate()->findOrFail($transaksi->id_barang);
+
+            $oldQty   = (int) $transaksi->jumlah;
+            $newQty   = (int) $request->jumlah;
+            $deltaQty = $newQty - $oldQty;
+
+            // Validasi stok tidak negatif jika mengurangi qty masuk
+            $stokBaru = (int)$barang->stok + $deltaQty;
+            if ($stokBaru < 0) {
+                abort(422, 'Perubahan jumlah membuat stok menjadi negatif.');
+            }
+
+            // Agregat harga (rata-rata per transaksi)
+            $oldPrice = $transaksi->harga_satuan;      // bisa null (data lama)
+            $newPrice = (float) $request->harga_satuan;
+
+            $sum = (float) $barang->sum_harga_masuk;
+            $cnt = (int) $barang->cnt_harga_masuk;
+
+            // Jika transaksi lama belum punya harga, dan sekarang diberi harga → cnt++
+            if (is_null($oldPrice)) {
+                $sum += $newPrice;
+                $cnt += 1;
+            } else {
+                // Sama-sama berharga → sesuaikan delta harga
+                $sum += ($newPrice - (float)$oldPrice);
+            }
+
+            $avg = $cnt > 0 ? $sum / $cnt : null;
+
+            // Update transaksi
+            $transaksi->update([
+                'id_karyawan'  => $request->id_karyawan,
+                'jumlah'       => $newQty,
+                'harga_satuan' => $newPrice,
+                'keterangan'   => $request->keterangan,
+            ]);
+
+            // Update barang
+            $barang->update([
+                'stok'            => $stokBaru,
+                'sum_harga_masuk' => $sum,
+                'cnt_harga_masuk' => $cnt,
+                'avg_harga'       => $avg,
+            ]);
+        });
+
+        return redirect()->route('barangs.kartu-stok', $transaksi->id_barang)
+            ->with('success', 'Transaksi masuk berhasil diupdate');
+    }
+
+    // === KELUAR ===
+    $request->validate([
+        'id_karyawan' => 'required|exists:karyawan,id',
+        'jumlah'      => 'required|integer|min:1',
+        'keterangan'  => 'nullable|string',
+    ]);
+
+    DB::transaction(function () use ($request, $transaksi) {
+        $barang = Barang::lockForUpdate()->findOrFail($transaksi->id_barang);
+
+        $oldQty   = (int) $transaksi->jumlah;
+        $newQty   = (int) $request->jumlah;
+
+        // Transaksi keluar awalnya mengurangi stok sebesar oldQty.
+        // Setelah update, stok harus dikurangi sebesar newQty.
+        // Jadi penyesuaian stok = (oldQty - newQty)
+        $stokBaru = (int)$barang->stok + ($oldQty - $newQty);
+        if ($stokBaru < 0) {
+            abort(422, 'Perubahan jumlah membuat stok menjadi negatif.');
+        }
+
+        $transaksi->update([
+            'id_karyawan' => $request->id_karyawan,
+            'jumlah'      => $newQty,
+            'keterangan'  => $request->keterangan,
+        ]);
+
+        $barang->update(['stok' => $stokBaru]);
+    });
+
+    return redirect()->route('barangs.kartu-stok', $transaksi->id_barang)
+        ->with('success', 'Transaksi keluar berhasil diupdate');
+}
+
 }

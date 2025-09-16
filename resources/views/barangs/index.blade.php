@@ -8,7 +8,42 @@
     <div class="card">
       <div class="card-header d-flex justify-content-between align-items-center">
         <h3 class="card-title">Daftar Barang</h3>
-        <div class="card-tools">
+        <div class="card-tools d-flex flex-wrap align-items-center">
+          {{-- Fixed filters --}}
+          <div class="input-group input-group-sm mr-2" style="width: 200px;">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="fas fa-layer-group"></i></span>
+            </div>
+            <select id="filterKategori" class="form-control">
+              <option value="">Semua Kategori</option>
+              @foreach($kategoris as $kat)
+                <option value="{{ $kat->id }}">{{ $kat->nama }}</option>
+              @endforeach
+            </select>
+          </div>
+
+          <div class="input-group input-group-sm mr-2" style="width: 220px;">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="fas fa-truck"></i></span>
+            </div>
+            <select id="filterSupplier" class="form-control">
+              <option value="">Semua Supplier</option>
+              @foreach($suppliers as $sup)
+                <option value="{{ $sup->id }}">{{ $sup->nama_supplier }}</option>
+              @endforeach
+            </select>
+          </div>
+
+          {{-- Live search by nama --}}
+          <div class="input-group input-group-sm mr-2" style="width: 260px;">
+            <input type="text" id="searchBarang" class="form-control" placeholder="Cari nama barang…">
+            <div class="input-group-append">
+              <button class="btn btn-default" type="button" id="clearSearch" title="Bersihkan">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+
           <a href="{{ route('barangs.create') }}" class="btn btn-primary btn-sm">
             <i class="fas fa-plus"></i> Tambah Barang
           </a>
@@ -38,7 +73,13 @@
           <div class="alert alert-danger">{{ $message }}</div>
         @enderror
 
-        <div class="table-responsive">
+        <div class="table-responsive position-relative">
+          {{-- Spinner overlay untuk AJAX --}}
+          <div id="tblSpinner" class="position-absolute w-100 h-100 d-none"
+               style="top:0;left:0;background:rgba(255,255,255,.6);display:flex;align-items:center;justify-content:center;z-index:5;">
+            <i class="fas fa-spinner fa-spin fa-2x text-muted"></i>
+          </div>
+
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
@@ -48,12 +89,11 @@
                 <th>Supplier</th>
                 <th>Stok</th>
                 <th>Satuan</th>
-                <th>Stok Min</th>
                 <th>Status</th>
                 <th>Aksi</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="barangTbody">
               @foreach($barangs as $barang)
               <tr>
                 <td>{{ $loop->iteration }}</td>
@@ -62,7 +102,6 @@
                 <td>{{ $barang->supplier->nama_supplier ?? '-' }}</td>
                 <td>{{ $barang->stok }}</td>
                 <td>{{ $barang->satuan }}</td>
-                <td>{{ $barang->stok_minimum }}</td>
                 <td>
                   @if($barang->stok <= 0)
                     <span class="badge badge-danger">Habis</span>
@@ -72,7 +111,7 @@
                     <span class="badge badge-success">Aman</span>
                   @endif
                 </td>
-                <td>
+                <td class="text-nowrap">
                   <a href="{{ route('barangs.kartu-stok', $barang->id) }}" class="btn btn-info btn-sm" title="Kartu Stok">
                     <i class="fas fa-list"></i>
                   </a>
@@ -89,6 +128,9 @@
                 </td>
               </tr>
               @endforeach
+              @if($barangs->isEmpty())
+                <tr><td colspan="9" class="text-center">Tidak ada data</td></tr>
+              @endif
             </tbody>
           </table>
         </div>
@@ -107,28 +149,27 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
       </div>
       <div class="modal-body">
-<p class="mb-2">Format header (berbasis NAMA, tanpa ID):</p>
-<pre class="bg-light p-2 rounded mb-3">no,nama_barang,satuan,stok,stok_minimum,kategori_nama,supplier_nama</pre>
+        <p class="mb-2">Format header (berbasis NAMA, tanpa ID):</p>
+        <pre class="bg-light p-2 rounded mb-3">no,nama_barang,satuan,stok,stok_minimum,kategori_nama,supplier_nama</pre>
 
-<div class="custom-file mb-3">
-  <input type="file" name="file" class="custom-file-input" id="importBarang" accept=".xlsx,.xls,.csv" required>
-  <label class="custom-file-label" for="importBarang">Pilih file...</label>
-</div>
+        <div class="custom-file mb-3">
+          <input type="file" name="file" class="custom-file-input" id="importBarang" accept=".xlsx,.xls,.csv" required>
+          <label class="custom-file-label" for="importBarang">Pilih file...</label>
+        </div>
 
-<div class="form-check mb-2">
-  <input class="form-check-input" type="checkbox" name="auto_create" id="autoCreate" value="1">
-  <label class="form-check-label" for="autoCreate">
-    Buat kategori/supplier baru secara otomatis jika belum ada
-  </label>
-</div>
+        <div class="form-check mb-2">
+          <input class="form-check-input" type="checkbox" name="auto_create" id="autoCreate" value="1">
+          <label class="form-check-label" for="autoCreate">
+            Buat kategori/supplier baru secara otomatis jika belum ada
+          </label>
+        </div>
 
-<div class="form-check">
-  <input class="form-check-input" type="checkbox" name="case_sensitive" id="caseSensitive" value="1">
-  <label class="form-check-label" for="caseSensitive">
-    Pencocokan nama <strong>case-sensitive</strong>
-  </label>
-</div>
-
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" name="case_sensitive" id="caseSensitive" value="1">
+          <label class="form-check-label" for="caseSensitive">
+            Pencocokan nama <strong>case-sensitive</strong>
+          </label>
+        </div>
       </div>
       <div class="modal-footer">
         <div class="d-flex align-items-center mr-auto">
@@ -150,6 +191,7 @@
 @section('js')
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+  // Label file input
   var input = document.getElementById('importBarang');
   if (input) {
     input.addEventListener('change', function(){
@@ -157,6 +199,72 @@ document.addEventListener('DOMContentLoaded', function () {
       if (label && this.files.length) label.textContent = this.files[0].name;
     });
   }
+
+  // --- AJAX Search ---
+  const inputSearch   = document.getElementById('searchBarang');   // hanya nama
+  const btnClear      = document.getElementById('clearSearch');
+  const filterKat     = document.getElementById('filterKategori'); // fixed
+  const filterSup     = document.getElementById('filterSupplier'); // fixed
+  const tbody         = document.getElementById('barangTbody');
+  const spinner       = document.getElementById('tblSpinner');
+
+  let timer = null;
+  const DEBOUNCE = 300;
+
+  function setLoading(on) {
+    if (!spinner) return;
+    spinner.classList.toggle('d-none', !on);
+  }
+
+  async function fetchRows() {
+    const url = new URL("{{ route('barangs.search') }}", window.location.origin);
+
+    const q          = inputSearch ? inputSearch.value.trim() : '';
+    const kategoriId = filterKat?.value || '';
+    const supplierId = filterSup?.value || '';
+
+    if (q) url.searchParams.set('q', q);                       // live by name
+    if (kategoriId) url.searchParams.set('kategori_id', kategoriId); // fixed
+    if (supplierId) url.searchParams.set('supplier_id', supplierId); // fixed
+
+    setLoading(true);
+    try {
+      const res  = await fetch(url.toString(), { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+      const html = await res.text();
+      tbody.innerHTML = html;
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  // Debounce untuk input nama
+  if (inputSearch) {
+    inputSearch.addEventListener('input', function(){
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(fetchRows, DEBOUNCE);
+    });
+    inputSearch.addEventListener('keydown', function(e){
+      if (e.key === 'Escape') {
+        inputSearch.value = '';
+        fetchRows();
+        e.preventDefault();
+      }
+    });
+  }
+
+  // Fixed filter: langsung fetch on change
+  filterKat?.addEventListener('change', fetchRows);
+  filterSup?.addEventListener('change', fetchRows);
+
+  // tombol clear: hapus hanya teks pencarian (filter tetap)
+  btnClear?.addEventListener('click', function(){
+    if (!inputSearch) return;
+    inputSearch.value = '';
+    fetchRows();
+    inputSearch.focus();
+  });
 });
 </script>
 @endsection

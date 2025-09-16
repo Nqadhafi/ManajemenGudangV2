@@ -50,6 +50,8 @@ Route::middleware(['auth'])->group(function () {
                     // BARANG
 
         // Barang Management
+        Route::get('barangs/search', [BarangController::class, 'search'])
+            ->name('barangs.search');
         Route::resource('barangs', BarangController::class);
         Route::get('/barangs/{id}/kartu-stok', [BarangController::class, 'kartuStok'])->name('barangs.kartu-stok');
         
@@ -60,12 +62,15 @@ Route::middleware(['auth'])->group(function () {
         // Transaksi Keluar (Koreksi Stok)
         Route::get('/transaksi/keluar', [TransaksiController::class, 'keluarIndex'])->name('transaksi.keluar');
         Route::post('/transaksi/keluar', [TransaksiController::class, 'keluarStore']);
+        Route::get('transaksi/{transaksi}/edit', [TransaksiController::class, 'edit'])->name('transaksi.edit');
+        Route::put('transaksi/{transaksi}', [TransaksiController::class, 'update'])->name('transaksi.update');
         
         // Laporan
         Route::get('/laporan/stok', [LaporanController::class, 'stokIndex'])->name('laporan.stok');
         Route::get('/laporan/transaksi', [LaporanController::class, 'transaksiIndex'])->name('laporan.transaksi');
         Route::get('/laporan/stok/print', [LaporanController::class, 'stokPrint'])->name('laporan.stok.print');
         Route::get('/laporan/transaksi/print', [LaporanController::class, 'transaksiPrint'])->name('laporan.transaksi.print');
+        Route::get('laporan/stok/search', [LaporanController::class, 'stokSearch'])->name('laporan.stok.search');
 
 
     });
